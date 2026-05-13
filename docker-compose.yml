@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: miproducto_db
+    environment:
+      POSTGRES_DB: MiProductoDB
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d MiProductoDB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: ./src/MiProducto.API/Dockerfile
+    container_name: miproducto_api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=MiProductoDB;Username=admin;Password=admin123
+      - Jwt__Key=MiClaveSecretaSuperSegura2024MiProductoAPI!
+      - Jwt__Issuer=MiProductoAPI
+      - Jwt__Audience=MiProductoFrontend
+    volumes:
+      - api_logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ../demomiproducto-frontend
+      dockerfile: ./Dockerfile
+    container_name: miproducto_frontend
+    ports:
+      - "8081:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  api_logs:

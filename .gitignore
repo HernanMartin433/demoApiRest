@@ -1,0 +1,22 @@
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+**/logs/
+*.user
+*.suo
+
+# Secrets
+**/appsettings.Production.json
+**/wwwroot/images/
+
+# Node
+**/node_modules/
+**/dist/
+
+# Docker
+**/.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
