@@ -147,6 +147,16 @@ try
         options.AddPolicy("AllowAll", policy =>
             policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
+    // ─── Upload file size limit ───────────────────────────────────
+    builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+    {
+        options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10MB
+    });
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB
+    });
+
     var app = builder.Build();
 
     // ─── Migraciones automáticas ──────────────────────────────────
