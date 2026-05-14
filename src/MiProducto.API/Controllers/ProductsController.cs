@@ -84,9 +84,13 @@ public class ProductsController : ControllerBase
         if (file.Length > 5 * 1024 * 1024)
             return BadRequest(new { message = "La imagen no puede superar 5MB." });
 
-        using var stream = file.OpenReadStream();
+        // Copiamos el stream a memoria para evitar que se cierre
+        using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream, cancellationToken);
+        memoryStream.Position = 0;
+
         var result = await _mediator.Send(
-            new AddProductImageCommand(id, stream, file.FileName), cancellationToken);
+            new AddProductImageCommand(id, memoryStream, file.FileName), cancellationToken);
 
         return result is null ? NotFound() : Ok(result);
     }
