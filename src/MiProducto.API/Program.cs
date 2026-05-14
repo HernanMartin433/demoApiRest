@@ -52,10 +52,23 @@ try
     builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
     // ─── File Storage ─────────────────────────────────────────────
-    var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "images");
-    builder.Services.AddSingleton<IFileStorageService>(
-        new FileStorageService(imagesPath, "/images"));
-
+    //var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "images");
+    //builder.Services.AddSingleton<IFileStorageService>(
+    //    new FileStorageService(imagesPath, "/images"));
+    // ─── File Storage ─────────────────────────────────────────────
+    if (builder.Environment.IsProduction())
+    {
+        builder.Services.AddSingleton<IFileStorageService>(new CloudinaryStorageService(
+            builder.Configuration["Cloudinary:CloudName"]!,
+            builder.Configuration["Cloudinary:ApiKey"]!,
+            builder.Configuration["Cloudinary:ApiSecret"]!));
+    }
+    else
+    {
+        var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "images");
+        builder.Services.AddSingleton<IFileStorageService>(
+            new FileStorageService(imagesPath, "/images"));
+    }
     // ─── MediatR ──────────────────────────────────────────────────
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssembly(

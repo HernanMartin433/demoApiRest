@@ -37,4 +37,12 @@ public class FileStorageService : IFileStorageService
         }
         catch { }
     }
+    public async Task DeleteFileAsync(string fileUrl)
+    {
+        var fileName = Path.GetFileName(fileUrl);
+        var filePath = Path.Combine(_basePath, fileName);
+        if (File.Exists(filePath))
+            File.Delete(filePath);
+        await Task.CompletedTask;
+    }
 }
