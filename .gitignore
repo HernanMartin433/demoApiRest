@@ -8,6 +8,7 @@
 
 # Secrets
 **/appsettings.Production.json
+**/appsettings.json
 **/wwwroot/images/
 
 # Node

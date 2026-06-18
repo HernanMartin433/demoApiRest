@@ -17,16 +17,7 @@ public class ProductsController : ControllerBase
     public ProductsController(IMediator mediator) => _mediator = mediator;
 
     /// <summary>Obtiene todos los productos activos con paginación.</summary>
-    /*[HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 5,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await _mediator.Send(new GetAllProductsQuery(pageNumber, pageSize), cancellationToken);
-        return Ok(result);
-    }*/
+
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(

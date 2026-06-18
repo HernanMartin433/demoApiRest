@@ -31,8 +31,9 @@ try
 
     // ─── Base de datos ────────────────────────────────────────────
     //builder.Services.AddDbContext<AppDbContext>(options =>
-    //    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    //   options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     // ─── Base de datos ────────────────────────────────────────────────
+    
     var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
         ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -51,10 +52,7 @@ try
     builder.Services.AddScoped<IJwtService, JwtService>();
     builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-    // ─── File Storage ─────────────────────────────────────────────
-    //var imagesPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "images");
-    //builder.Services.AddSingleton<IFileStorageService>(
-    //    new FileStorageService(imagesPath, "/images"));
+
     // ─── File Storage ─────────────────────────────────────────────
     if (builder.Environment.IsProduction())
     {
@@ -184,7 +182,8 @@ try
 
     app.UseCors("AllowAll");
     app.UseStaticFiles();
-    app.UseHttpsRedirection();
+    //solo dev
+    //app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
